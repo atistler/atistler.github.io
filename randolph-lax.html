@@ -30,7 +30,7 @@
 <body>
 <div class="container mt-5">
     <h1 class="text-center mb-4">2nd Grade Lax Game Rotation</h1>
-    <div class="alert" role="alert">
+    <div class="alert alert-primary" role="alert">
         <strong>Instructions:</strong> Enter the names of 2 goalies, 6 starters for non-goalie positions, and optional
         bench players.
         <ul>
@@ -41,15 +41,15 @@
         </ul>
     </div>
     <div class="form-group">
-        <label for="goalies">Enter 2 goalies, one per line:</label>
+        <label for="goalies">2 goalies, one per line:</label>
         <textarea class="form-control" id="goalies" rows="2" placeholder="Enter 2 goalies"></textarea>
     </div>
     <div class="form-group">
-        <label for="starters">Enter 6 starters for non-goalie positions, one per line:</label>
+        <label for="starters">6 starters for non-goalie positions, one per line:</label>
         <textarea class="form-control" id="starters" rows="6" placeholder="Enter 6 starters"></textarea>
     </div>
     <div class="form-group">
-        <label for="benchPlayers">Enter bench players, one per line (optional):</label>
+        <label for="benchPlayers">Bench players, one per line (optional):</label>
         <textarea class="form-control" id="benchPlayers" rows="4" placeholder="Enter bench players"></textarea>
     </div>
     <button class="btn btn-primary btn-block" onclick="displaySchedule()">Generate Game Rotation</button>
