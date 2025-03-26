@@ -25,7 +25,9 @@
             <li>Player positions will be randomized, ensuring that the same player will not play the same position
                 consecutively and attempting to give equal playing time to all players.
             </li>
-            <li>In the interest of giving equal playing time to all players, the bench after each "period" (midway and at the end of each quarter).</li>
+            <li>In the interest of giving equal playing time to all players, the bench after each "period" (midway and
+                at the end of each quarter).
+            </li>
             <li>If there are 2 goalies, the first goalie play the first half as goalie and the other half starting on
                 the bench. The second goalie will play the first half starting on the bench (being subbed in as
                 necessary) and the second half as goalie.
@@ -64,11 +66,11 @@
             this.middieCount = 0;
             this.defenseCount = 0;
             this.goalieCount = 0;
-            this.postions = []
+            this.positions = []
         }
 
         set lastPosition(position) {
-            this.postions.push(position);
+            this.positions.unshift(position);
         }
 
         didNotPlayPositionLast(position) {
@@ -76,11 +78,11 @@
         }
 
         didNotPlayPositionLastTwice(position) {
-            return this.postions[this.postions.length - 1] !== position && this.postions[this.postions.length - 2] !== position;
+            return this.positions.length >= 2 && (this.positions[0] !== position && this.positions[1] !== position)
         }
 
         get lastPosition() {
-            return this.postions[this.postions.length - 1];
+            return this.positions[0];
         }
 
         get total() {
@@ -159,6 +161,8 @@
                     this.defense[0].didNotPlayPositionLastTwice(Position.Defense) &&
                     this.defense[1].didNotPlayPositionLastTwice(Position.Defense)) {
                     lineupIsFair = true
+                    console.log('Found fair lineup after', countLastTwice, 'attempts')
+                    console.log(this.attack[0].positions)
                 }
             }
             let countLast = 0
@@ -183,7 +187,7 @@
         }
 
         _setLastPositions() {
-            this.goalie.lastPosition = Position.Goalie
+            // this.goalie.lastPosition = Position.Goalie
             this.attack[0].lastPosition = Position.Attack
             this.attack[1].lastPosition = Position.Attack
             this.middies[0].lastPosition = Position.Middie
@@ -232,6 +236,7 @@
 
         rotate(rotateGoalie = false, ensureEqualPlayingTime = false) {
             this._setPlayerCounts()
+            this._setLastPositions()
             const toSub = Math.min(this.bench.length, this.#numFieldPlayers)
             const toSit = this.fieldPlayers.slice(0, toSub)
             const toStay = this.fieldPlayers.slice(toSub, this.fieldPlayers.length)
@@ -244,7 +249,6 @@
                 this._ensureEqualPlayingTime()
             }
             this._setRandomStarters()
-            this._setLastPositions()
         }
     }
 
@@ -304,7 +308,7 @@
             return;
         }
         if (goalies.length === 2) {
-           benchPlayers.push(goalies[1])
+            benchPlayers.push(goalies[1])
         }
         const bench = new Bench(benchPlayers)
         const game = new Game(new Lineup(goalies[0], starters.slice(0, 2), starters.slice(2, 4), starters.slice(4, 6), bench), goalies)
@@ -342,7 +346,6 @@
             playerRows += `
                 <tr>
                     <td>${player.name}</td>
-                    <td>${player.goalieCount}</td>
                     <td>${player.goalieCount}</td>
                     <td>${player.attackCount}</td>
                     <td>${player.middieCount}</td>
