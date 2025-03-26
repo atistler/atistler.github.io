@@ -13,15 +13,29 @@
         textarea {
             resize: none;
         }
+
+        @media print {
+            .no-print, .no-print * {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="container mt-4">
     <h2 class="text-center mb-3">Lax Rotation-O-Matic</h2>
-    <div class="alert alert-primary" role="alert">
+    <div class="alert alert-primary no-print" role="alert">
         <strong>Instructions:</strong> Enter the names of 2 goalies, 6 starters for non-goalie positions, and optional
-        bench players.
+        bench players. Click the "Generate Game Rotation" button to generate the game rotation. Click the "Print/Save
+        PDF".
+        <br>
+
         <ul class="mb-0 small">
+            <li>
+                Please note that nothing gets saved, if you close or refresh this page, you will lose the data. Once
+                you have a rotation that you are happy with, click "Print/Save PDF" and share the file on
+                TeamSnap.
+            </li>
             <li>Player positions will be randomized, ensuring that the same player will not play the same position
                 consecutively and attempting to give equal playing time to all players.
             </li>
@@ -47,8 +61,8 @@
         <label for="benchPlayers">Bench players, one per line (optional):</label>
         <textarea class="form-control" id="benchPlayers" rows="4" placeholder="Enter bench players"></textarea>
     </div>
-    <button class="btn btn-primary btn-block" onclick="displayRotation()">Generate Game Rotation</button>
-    <button class="btn btn-secondary btn-block mt-2" onclick="window.print()">Print/Save PDF</button>
+    <button class="btn btn-primary btn-block no-print" onclick="displayRotation()">Generate Game Rotation</button>
+    <button class="btn btn-secondary btn-block mt-2 no-print" onclick="window.print()">Print/Save PDF</button>
     <div id="schedule" class="mt-4"></div>
 </div>
 <script>
