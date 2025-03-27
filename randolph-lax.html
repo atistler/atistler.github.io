@@ -84,6 +84,7 @@
             this.defenseCount = 0;
             this.goalieCount = 0;
             this.positions = []
+            this.comingOffBench = false
         }
 
         set lastPosition(position) {
@@ -178,8 +179,6 @@
                     this.defense[0].didNotPlayPositionLastTwice(Position.Defense) &&
                     this.defense[1].didNotPlayPositionLastTwice(Position.Defense)) {
                     lineupIsFair = true
-                    console.log('Found fair lineup after', countLastTwice, 'attempts')
-                    console.log(this.attack[0].positions)
                 }
             }
             let countLast = 0
@@ -200,11 +199,11 @@
             }
             if (!lineupIsFair) {
                 alert("Could not find a fair lineup after 10000 attempts. Please try again.")
+                throw new Error("Could not find a fair lineup after 10000 attempts. Please try again.")
             }
         }
 
         _setLastPositions() {
-            // this.goalie.lastPosition = Position.Goalie
             this.attack[0].lastPosition = Position.Attack
             this.attack[1].lastPosition = Position.Attack
             this.middies[0].lastPosition = Position.Middie
@@ -299,6 +298,8 @@
             while (this.currentSession) {
                 const current = {session: this.currentSession, lineup: this.lineup}
                 yield current;
+                this.lineup.bench.players.forEach(p => p.comingOffBench = true)
+                this.lineup.fieldPlayers.forEach(p => p.comingOffBench = false)
                 this.lineup.rotate(this.currentSession.rotateGoalie, this.currentSession.ensureEqualPlayingTime);
                 this.sessionNumber += 1;
                 this.currentSession = this._sessions[this.sessionNumber];
@@ -314,15 +315,15 @@
     function buildRotation(goalies, starters, benchPlayers) {
         if (goalies.length !== 1 && goalies.length !== 2) {
             alert('Please enter either 1 or 2 goalies.');
-            return;
+            throw new Error('Please enter either 1 or 2 goalies.');
         } else if (starters.length !== 6) {
             alert('Please enter exactly 6 starters for non-goalie positions.');
-            return;
+            throw new Error('Please enter exactly 6 starters for non-goalie positions.');
         }
         const allPlayers = goalies.concat(starters).concat(benchPlayers)
         if (!areUnique(allPlayers)) {
             alert('Please ensure that all player names are unique')
-            return;
+            throw new Error('Please ensure that all player names are unique')
         }
         if (goalies.length === 2) {
             benchPlayers.push(goalies[1])
@@ -340,27 +341,28 @@
     }
 
     function displayRotation() {
-        const {goalies, starters, benchPlayers} = getPlayers();
-        const {game, allPlayers} = buildRotation(goalies, starters, benchPlayers)
-        const scheduleDiv = document.getElementById('schedule');
+        try {
+            const {goalies, starters, benchPlayers} = getPlayers();
+            const {game, allPlayers} = buildRotation(goalies, starters, benchPlayers)
+            const scheduleDiv = document.getElementById('schedule');
 
-        let rotationRows = '';
-        for (const {session, lineup} of game.sessions()) {
-            rotationRows += `
+            let rotationRows = '';
+            for (const {session, lineup} of game.sessions()) {
+                rotationRows += `
                 <tr>
                     <td>${session.quarter}</td>
                     <td>${session.session}</td>
                     <td>${lineup.goalie.name}</td>
-                    <td>${lineup.attack.map(p => p.name).join(', ')}</td>
-                    <td>${lineup.middies.map(p => p.name).join(', ')}</td>
-                    <td>${lineup.defense.map(p => p.name).join(', ')}</td>
+                    <td>${lineup.attack.map(p => p.comingOffBench ? `<b>${p.name}</b>` : p.name).join(', ')}</td>
+                    <td>${lineup.middies.map(p => p.comingOffBench ? `<b>${p.name}</b>` : p.name).join(', ')}</td>
+                    <td>${lineup.defense.map(p => p.comingOffBench ? `<b>${p.name}</b>` : p.name).join(', ')}</td>
                     <td>${lineup.bench.players.map(p => p.name).join(', ')}</td>
                 </tr>
             `;
-        }
-        let playerRows = '';
-        for (const player of allPlayers) {
-            playerRows += `
+            }
+            let playerRows = '';
+            for (const player of allPlayers) {
+                playerRows += `
                 <tr>
                     <td>${player.name}</td>
                     <td>${player.goalieCount}</td>
@@ -370,12 +372,13 @@
                     <td>${player.total}${player.isGoalie ? ` (${player.goalieCount} as Goalie)` : ''}</td>
                 </tr>
             `;
-        }
+            }
 
-        scheduleDiv.innerHTML = `
+            scheduleDiv.innerHTML = `
                 <h4>Game Rotation for ${allPlayers.length} Players</h4>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover">
+                        <caption style="caption-side: top">Players in <b>bold</b> are coming into the game off the bench</caption>
                         <thead>
                             <tr>
                                 <th>Quarter</th>
@@ -394,7 +397,7 @@
                 </div>
                 <h4>Player Position Count</h4>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>Player</th>
@@ -411,6 +414,9 @@
                     </table>
                 </div>
             `;
+        } catch(err) {
+            console.log(err.message)
+        }
     }
 
 </script>
