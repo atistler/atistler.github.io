@@ -9,10 +9,12 @@
         body {
             background-color: #f8f9fa;
         }
+
         @media print {
             .no-print, .no-print * {
                 display: none !important;
             }
+
             #schedule {
                 margin-top: 0 !important;
             }
@@ -30,7 +32,7 @@
         <strong>Instructions:</strong> Enter the names of 2 goalies, 6 starters for non-goalie positions, and optional
         bench players. Please note that nothing gets saved, if you close or refresh this page, you will lose the data.
         Once you have a rotation that you are happy with, click "Print/Save PDF" and share the file on
-        TeamSnap.
+        TeamSnap or Text.
         <ul class="mb-0 mt-2 small">
             <li>Player positions will be randomized, ensuring that the same player will not play the same position
                 consecutively and attempting to give equal playing time to all players.
@@ -39,11 +41,11 @@
                 each playing period (midway and
                 at the end of each quarter).
             </li>
-            <li>If there are 2 goalies, the first goalie will play the first half as goalie and the second half starting on
-                the bench. The second goalie will play the first half starting on the bench and the second half as
+            <li>If there are 2 goalies, the first goalie will play the first half as goalie and the second half starting
+                on the bench. The second goalie will play the first half starting on the bench and the second half as
                 goalie.
             </li>
-            <li>There is an assumption that we have at least 7 players available for the game (1 goalie, 6 field
+            <li>There is an assumption that there are least 7 players available for the game (1 goalie, 6 field
                 players)
             </li>
         </ul>
@@ -52,24 +54,28 @@
         <div class="col-6">
             <div class="form-group">
                 <label for="goalies">1 or 2 goalies, one per line:</label>
-                <textarea class="form-control" id="goalies" rows="2" placeholder="Enter 1 or 2 goalies"
+                <textarea class="form-control" style="resize: none" id="goalies" rows="2"
+                          placeholder="Enter 1 or 2 goalies"
                           autofocus></textarea>
             </div>
             <div class="form-group">
                 <label for="starters">6 starters for field positions (2 attack, 2 middie, 2 defense), one per
                     line:</label>
-                <textarea class="form-control" id="starters" rows="6" placeholder="Enter 6 starters"></textarea>
+                <textarea class="form-control" style="resize: none" id="starters" rows="6"
+                          placeholder="Enter 6 starters"></textarea>
             </div>
         </div>
         <div class="col-6">
             <div class="form-group">
                 <label for="benchPlayers">Bench players, one per line (optional):</label>
-                <textarea class="form-control" id="benchPlayers" rows="8" placeholder="Enter bench players"></textarea>
+                <textarea class="form-control" id="benchPlayers" rows="6" placeholder="Enter bench players"></textarea>
             </div>
         </div>
     </div>
-    <button class="btn btn-primary btn-block no-print" onclick="displayRotation()">Generate Game Rotation</button>
-    <button class="btn btn-secondary btn-block mt-2 no-print" onclick="window.print()">Print/Save PDF</button>
+    <div class="d-f d-md-flex justify-content-md-end no-print">
+        <button class="btn btn-primary mr-2" onclick="displayRotation()">Generate Game Rotation</button>
+        <button class="btn btn-secondary" onclick="window.print()">Print/Save PDF</button>
+    </div>
     <div id="schedule" class="mt-4"></div>
 </div>
 <script>
