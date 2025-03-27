@@ -18,9 +18,13 @@
             .no-print, .no-print * {
                 display: none !important;
             }
+            .container {
+                margin-top: 0 !important;
+            }
+            #schedule {
+                margin-top: 0 !important;
+            }
         }
-
-
     </style>
 </head>
 <body>
@@ -52,17 +56,25 @@
             </li>
         </ul>
     </div>
-    <div class="form-group">
-        <label for="goalies">1 or 2 goalies, one per line:</label>
-        <textarea class="form-control" id="goalies" rows="2" placeholder="Enter 1 or 2 goalies" autofocus></textarea>
-    </div>
-    <div class="form-group">
-        <label for="starters">6 starters for field positions (2 attack, 2 middie, 2 defense), one per line:</label>
-        <textarea class="form-control" id="starters" rows="6" placeholder="Enter 6 starters"></textarea>
-    </div>
-    <div class="form-group">
-        <label for="benchPlayers">Bench players, one per line (optional):</label>
-        <textarea class="form-control" id="benchPlayers" rows="4" placeholder="Enter bench players"></textarea>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <label for="goalies">1 or 2 goalies, one per line:</label>
+                <textarea class="form-control" id="goalies" rows="2" placeholder="Enter 1 or 2 goalies"
+                          autofocus></textarea>
+            </div>
+            <div class="form-group">
+                <label for="starters">6 starters for field positions (2 attack, 2 middie, 2 defense), one per
+                    line:</label>
+                <textarea class="form-control" id="starters" rows="6" placeholder="Enter 6 starters"></textarea>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <label for="benchPlayers">Bench players, one per line (optional):</label>
+                <textarea class="form-control" id="benchPlayers" rows="8" placeholder="Enter bench players"></textarea>
+            </div>
+        </div>
     </div>
     <button class="btn btn-primary btn-block no-print" onclick="displayRotation()">Generate Game Rotation</button>
     <button class="btn btn-secondary btn-block mt-2 no-print" onclick="window.print()">Print/Save PDF</button>
@@ -375,10 +387,11 @@
             }
 
             scheduleDiv.innerHTML = `
-                <h4>Game Rotation for ${allPlayers.length} Players</h4>
+                <hr>
+                <h5>Game Rotation for ${allPlayers.length} Players</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover">
-                        <caption style="caption-side: top">Players in <b>bold</b> are coming into the game off the bench</caption>
+                        <caption style="caption-side: top" class="pt-0">Players in <b>bold</b> are coming into the game off the bench</caption>
                         <thead>
                             <tr>
                                 <th>Quarter</th>
@@ -395,8 +408,8 @@
                         </tbody>
                     </table>
                 </div>
-                <h4>Player Position Count</h4>
-                <div class="table-responsive">
+                <h5 class="mt-3 mb-3">Player Position Count</h5>
+                <div class="table-responsive table-sm">
                     <table class="table table-bordered table-striped table-hover">
                         <thead>
                             <tr>
@@ -414,7 +427,7 @@
                     </table>
                 </div>
             `;
-        } catch(err) {
+        } catch (err) {
             console.log(err.message)
         }
     }
